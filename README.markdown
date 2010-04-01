@@ -6,6 +6,13 @@ Remail uses Google App Engine to send and receive emails RESTfully.
 ## Features
 * ActionMailer POSTs emails to your Remail App Engine in order to send them
 * Remail POSTs received emails back to a configurable URL
+  * Remail will sent an Email hash with the following attributes:
+    * raw - The raw content of the message
+    * sender - Whom sent it
+    * subject - The subject of the incoming message
+    * to - Who it was intend it to
+    * date - Send date of the message
+    
 * Remail will retry the callback if the endpoint is not available
 
 ## Setup
