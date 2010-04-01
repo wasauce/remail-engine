@@ -7,8 +7,16 @@ from google.appengine.api.urlfetch import Error as FetchError
 
 settings = yaml.load(open('settings.yaml'))
 
-def callback(raw):
-  result = {'email': {'raw': raw}}
+def callback(message):
+  
+  result = {'email': 
+                  { 'raw': message.original.as_string(True),
+                    'sender':message.sender, 
+                    'subject':message.subject, 
+                    'to': message.to,
+                    'date':message.date
+                    }
+            }
   
   response = fetch(settings['outbound_url'], 
               payload=json.dumps(result), 
@@ -26,4 +34,4 @@ def callback(raw):
 class InboundHandler(InboundMailHandler):
     def receive(self, message):
       logging.info("Received a message from: " + message.sender)
-      deferred.defer(callback, message.original.as_string(True), _queue='inbound')
+      deferred.defer(callback, message, _queue='inbound')

@@ -19,7 +19,9 @@ def safe_dict(d):
     
 def email(body):
   email = json.loads(body)
-  mail.EmailMessage(**safe_dict(email)).send()
+  logging.info(email)
+  mail_message = mail.EmailMessage(**safe_dict(email))
+  mail_message.send()
 
 class OutboundHandler(webapp.RequestHandler):
 
