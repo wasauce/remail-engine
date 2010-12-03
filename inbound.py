@@ -1,4 +1,5 @@
 import logging, email, yaml
+from models import store_email_and_attachment
 from django.utils import simplejson as json
 from google.appengine.ext import webapp, deferred
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
@@ -17,6 +18,7 @@ def callback(message):
                     'date':message.date
                     }
             }
+  store_email_and_attachment()
   
   response = fetch(settings['outbound_url'], 
               payload=json.dumps(result), 
@@ -27,6 +29,7 @@ def callback(message):
               },
               deadline=10
              )
+
   logging.info(response.status_code)
   if response.status_code != 200:
     raise FetchError()
