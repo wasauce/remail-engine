@@ -1,4 +1,6 @@
 import logging, yaml
+from models import store_email_and_attachment
+
 from django.utils import simplejson as json
 from google.appengine.ext import webapp, deferred
 from google.appengine.api import mail
@@ -22,6 +24,11 @@ def email(body):
   logging.info(email)
   mail_message = mail.EmailMessage(**safe_dict(email))
   mail_message.send()
+  email = store_email_and_attachment(mail_message, is_from_external=False)
+  if not email:
+    logging.error("Failed to save message: %s", 
+                  message.original.as_string(True))
+
 
 class OutboundHandler(webapp.RequestHandler):
 

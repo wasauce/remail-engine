@@ -18,7 +18,10 @@ def callback(message):
                     'date':message.date
                     }
             }
-  store_email_and_attachment()
+  email = store_email_and_attachment(message, is_from_external=True)
+  if not email:
+    logging.error("Failed to save message: %s", 
+                  message.original.as_string(True))
   
   response = fetch(settings['outbound_url'], 
               payload=json.dumps(result), 
