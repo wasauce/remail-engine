@@ -18,7 +18,7 @@ def safe_dict(d):
     return [safe_dict(x) for x in d] 
   else: 
     return d
-    
+
 def email(body):
   email = json.loads(body)
   logging.info(email)
