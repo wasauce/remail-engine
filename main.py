@@ -5,63 +5,37 @@ from inbound import InboundHandler
 
 _DEBUG = False
 
+class TestEmail():
+	"""
+	1. Create an object that has everything I need
+	2. Convert the object into JSON.
+	3. Done.
+	4. Eventually make this into a function that takes the appropriate values.
+	"""
+	def __init__(self, key, to, cc, bcc, reply_to, subject, body=None,
+	 			 html=None):
+		self.headers = {}
+		self.headers["Authorization"] = key #check Authorization, Check key
+		self.headers["to"] = to
+		self.headers["cc"] = cc
+		self.headers["bcc"] = bcc
+		self.headers["reply_to"] = reply_to
+		self.headers["subject"] = subject
+		if body:
+			self.headers["body"] = body
+		elif html:
+			self.headers["html"] = html
+		else:
+			raise error.# Fix this
+	
+
 class SendTestEmailHandler(webapp.RequestHandler):
-  """
-    
-  """
+	"""
+	1. Call function to create an email object with all the details we need and be returned JSON
+	2. Take the JSON and pass it to the correct URL.
+	3. Done.
+	"""
 
-
-### code from ruby
-  Email.headers["Authorization"] = key
-
-class Email < ActiveResource::Base
-  self.timeout = 5
-  self.format  = :json
-  self.include_root_in_json = false
-  
-  cattr_accessor :headers
-  @@headers = {}
-  
-  schema do
-    string :sender, :to, :cc, :bcc,
-           :reply_to, :subject,
-           :body, :html
-  end
-  
-  validates_presence_of :sender, :to, :subject
-  validates_presence_of :body, :unless => :html?
-
-  # The sender address must be the email address of a 
-  # registered administrator for the application    
-  def from=(address)
-    self.sender = address
-  end
-end
-
-class ActionMailer
-  def initialize(settings)
-    settings.each {|key, value| 
-      Remail.send("#{key}=", value) 
-    }
-  end
-      
-  def deliver!(mail)
-    remail = Remail::Email.new
-    
-    %w{to from cc bcc reply_to}.each {|attr|
-      value = mail.send(attr)
-      next unless value
-      remail.send("#{attr}=", value.join(", "))
-    }      
-    
-    remail.subject  = mail.subject
-    
-    text_body   = mail.text_part ? mail.text_part.body : mail.body
-    html_body   = mail.html_part && mail.html_part.body
-    remail.body = text_body.encoded if text_body
-    remail.html = html_body.encoded if html_body
-    
-    remail.save!
 
 # Map URLs to our RequestHandler classes
 _URLS = [
