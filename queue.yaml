@@ -3,6 +3,7 @@
 queue:
 - name: inbound
   rate: 5/s
+# We may need to increse the rate for outbound depending on usage.
 - name: outbound
   rate: 2000/d
   bucket_size: 10

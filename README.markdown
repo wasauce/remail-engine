@@ -21,10 +21,11 @@ Remail uses Google App Engine to send and receive emails RESTfully.
   * Add a publicly accessible callback url as the outbound_url.
 * [Create](https://appengine.google.com/) a Google App Engine application.
 * Configure app.yaml with the new app id.
+* Configure queue.yaml with the approriate settings for # of emails outbound.
 * Upload the engine to Google App Engine (see their [docs](http://code.google.com/appengine/docs))
 * DONE. Now go send/receive some email.
   * Ruby users consider installing the [Remail gem](http://github.com/maccman/remail) (sudo gem install remail) to more easily send/receive emails.
-  * Python users consider reviewing a python example found in main.py as the SendTestEmailHandler
+  * Python users consider reviewing the example code found in main.py as the SendTestEmailHandler
 * Note that there are multiple options for the email address FROM which the email is sent. Specifically it can be an email address of a registered administrator (developer) of the application, the current user if signed in with Google Accounts, or any valid email receiving address for the app (that is, an address of the form string@appid.appspotmail.com). See [more details here.](http://code.google.com/appengine/docs/python/mail/overview.html)
   * For a more professional/official looking emails, register an email address from your domain as an administrator (developer) of the application and send all emails from that address -- e.g. support@mydomain.com.
 

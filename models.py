@@ -1,18 +1,15 @@
-
 """
-File contains database models for storing emails and any associated attachments.
+Database models for storing emails and any associated attachments.
 
-TODO:
---Test to see if they work as intended
---make the test instance that can be hit with requests
---fire test emails at it
---write a library / util to send these emails in tornado
-
+Additionally included are helper functions for creating models.
 """
 
-import logging
+import logging, yaml
 import email
 from google.appengine.ext import db
+from google.appengine.api import mail
+
+settings = yaml.load(open('settings.yaml'))
 
   
 class Email(db.Model):
@@ -25,10 +22,24 @@ class Email(db.Model):
 	auto_now_add = DateTimeProperty(auto_now_add=True)
 	date = DateTimeProperty()
 
+
 class Attachment(db.Model):
 	file_name = StringProperty()
 	file_blob = BlobProperty()
 	email = ReferenceProperty(reference_class=Email)
+
+
+def send_email_to_admin(subject, body):
+	""" Sends email to the admins of the site.
+	"""
+	# mail_admin must be an admin of the app. app_admin set in settings.yaml
+    mail_admin = settings['app_admin']
+
+	subject = 'REMAIL APP: ' + subject
+	mail.send_mail_to_admins(sender=mail_admin,
+                             subject=subject,
+                             body=body)
+
 
 
 def create_new_attachment(file_name, file_blob, email):
@@ -43,13 +54,24 @@ def create_new_attachment(file_name, file_blob, email):
 		new_attachment.put()
 		logging.info('Saved an new attachment.')
 		return new_attachment
+	except:
+		subject = 'Failed to create attachment.'
+		body = 'Email with which there was a failed message: %s' % str(email)
+		send_email_to_admin(subject, body)
+		return None
+
 
 def create_new_email(raw, sender, subject, to, date, has_attachment,
 					 is_from_external=True):
 	"""Function to store an email in the database."""
 
+    if has_attachment:
+	  attachment = True
+	else:
+	  attachment = False
+
 	new_email = Email()
-	new_email.has_attachment = has_attachment
+	new_email.has_attachment = attachment
 	new_email.is_from_external = is_from_external
 	new_email.raw = raw
 	new_email.sender = sender
@@ -60,8 +82,14 @@ def create_new_email(raw, sender, subject, to, date, has_attachment,
 
 	try:
 		new_email.put()
-		logging.info('Saved an new email.')
+		logging.info('Saved a new email.')
 		return new_email
+	except:
+		subject = 'Failed to save a new email.'
+		body = 'Email with which there was a failed message: %s' % str(raw)
+		send_email_to_admin(subject, body)
+		return None
+		
 
 def store_email_and_attachment(message, is_from_external=True):
 	"""Function to store a message in the database."""

@@ -5,7 +5,7 @@ from inbound import InboundHandler
 
 _DEBUG = False
 
-class TestEmail():
+class TestEmail(object):
 	"""
 	1. Create an object that has everything I need
 	2. Convert the object into JSON.
@@ -27,7 +27,10 @@ class TestEmail():
 			self.headers["html"] = html
 		else:
 			raise error.# Fix this
-	
+
+
+def 
+
 
 class SendTestEmailHandler(webapp.RequestHandler):
 	"""
@@ -35,6 +38,21 @@ class SendTestEmailHandler(webapp.RequestHandler):
 	2. Take the JSON and pass it to the correct URL.
 	3. Done.
 	"""
+	def get(self):
+	  """For GET requests, return a form that can fire off an email."""
+	  self.response.out.write("""
+		  <html>
+			<body>
+	          <form action="/SendTestEmail" method="post">
+	            <div><input type="submit" value="Send Test Email"></div>
+	          </form>
+	        </body>
+	      </html>""")
+
+	def post(self):
+	  """"""
+	  
+		
 
 
 # Map URLs to our RequestHandler classes

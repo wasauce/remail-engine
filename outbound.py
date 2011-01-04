@@ -24,8 +24,11 @@ def email(body):
   logging.info(email)
   mail_message = mail.EmailMessage(**safe_dict(email))
   mail_message.send()
-  email = store_email_and_attachment(mail_message, is_from_external=False)
-  if not email:
+
+  #The below stores the email and any attachments
+  stored_email = store_email_and_attachment(mail_message,
+											is_from_external=False)
+  if not stored_email:
     logging.error("Failed to save message: %s", 
                   message.original.as_string(True))
 
